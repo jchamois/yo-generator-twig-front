@@ -134,7 +134,13 @@ module.exports = function (grunt) {
       },
       serve: {
         src: ['<%= yeoman.app %>/<%= yeoman.views %>/<%= yeoman.layout %>/layout.twig'],
-        ignorePath:  /\.\.\//
+        ignorePath:  /\.\.\//,
+          onError: function(err) {
+          if(err.code == 'BOWER_COMPONENTS_MISSING'){
+            console.log(err.code)
+            grunt.option("force",true);
+          }
+        }
       },
       sass: {
         src: ['<%= yeoman.app %>/<%= yeoman.styles %>/{,*/}*.{scss,sass}'],
