@@ -22,6 +22,7 @@ module.exports = generators.Base.extend({
   },
 
   askFor: function () {
+    console.log('askFor');
     var done = this.async();
 
     if (!this.options['skip-welcome-message']) {
@@ -31,6 +32,10 @@ module.exports = generators.Base.extend({
     }
 
     var prompts = [{
+        name: 'appName',
+        message: 'What is your app\'s name ?'
+      },{
+
       type: 'checkbox',
       name: 'features',
       message: 'Un petit modernizr ?',
@@ -39,10 +44,18 @@ module.exports = generators.Base.extend({
         value: 'includeModernizr',
         checked: true
       }]
-    }, {
+    },{
       type: 'confirm',
       name: 'includeJQuery',
       message: 'Jquery ça peut servir ?',
+      default: true,
+      when: function (answers) {
+        return answers.features
+      }
+    },{
+      type: 'confirm',
+      name: 'includeAtomik',
+      message: 'Atomik css ? ou pas ?',
       default: true,
       when: function (answers) {
         return answers.features
@@ -56,8 +69,10 @@ module.exports = generators.Base.extend({
         return features && features.indexOf(feat) !== -1;
       }
 
+      this.appName = answers.appName;
       this.includeModernizr = hasFeature('includeModernizr');
       this.includeJQuery = answers.includeJQuery;
+      this.includeAtomik = answers.includeAtomik;
 
       done();
     }.bind(this));
@@ -98,7 +113,7 @@ module.exports = generators.Base.extend({
         bowerJson.dependencies['jquery'] = '~2.1.4';
       }
 
-      if (this.includeModernizr) {
+      if(this.includeModernizr) {
         bowerJson.dependencies['modernizr'] = '~2.8.3';
       }
 
@@ -110,10 +125,17 @@ module.exports = generators.Base.extend({
     },
 
     editorConfig: function () {
-
       this.fs.copy(
         this.templatePath('.editorconfig'),
         this.destinationPath('.editorconfig')
+      );
+    },
+
+
+    jshintConfig: function () {
+      this.fs.copy(
+        this.templatePath('_jshint'),
+        this.destinationPath('.jshint')
       );
     },
 
@@ -124,19 +146,42 @@ module.exports = generators.Base.extend({
       );
     },
 
-    styles: function () {
-      this.fs.copyTpl(
-        this.templatePath('styles/_main.scss'),
-        this.destinationPath('app/styles/main.scss')
-      )
+    layout: function(){
+
+        this.fs.copyTpl(
+          this.templatePath('views/layout/_layout.twig'),
+          this.destinationPath('app/views/layout/layout.twig'),
+          {
+            appName: this.appName,
+            includeModernizr: this.includeModernizr,
+            includeAtomik: this.includeAtomik,
+          }
+        );
     },
 
-    html: function () {
-        this.copy("styles/_main.scss", "app/styles/main.scss");
+
+    css: function(){
+
+       if (this.includeAtomik) {
+         this.remote('jchamois', 'atomik-css', 'master', function(err, remote) {
+            remote.copy("app/src/css/reset.css", "app/styles/reset.scss");
+            remote.copy("app/src/css/atomic-core.css", "app/styles/atomic-core.scss");
+            remote.copy("app/src/css/atomic-custom.css", "app/styles/atomic-custom.scss");
+            remote.copy("app/src/css/author.css", "app/styles/author.scss");
+            remote.copy("app/src/css/mq.css", "app/styles/mq.scss");
+        }, true);
+
+       }else{
+          this.copy("styles/_main.scss", "app/styles/main.scss");
+       }
+
+
+    },
+
+    mainFiles: function () {
         this.copy("scripts/_app.js", "app/scripts/app.js");
         this.copy("scripts/_libs.js", "app/scripts/libs.js");
         this.copy("views/data/data.json", "app/views/data/data.json");
-        this.copy("views/layout/_layout.twig", "app/views/layout/layout.twig");
         this.copy("views/pages/_article.twig", "app/views/pages/article.twig");
         this.copy("views/partials/_nav.twig", "app/views/partials/_nav.twig");
     }

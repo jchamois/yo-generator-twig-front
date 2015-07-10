@@ -33,10 +33,7 @@ module.exports = function (grunt) {
     watch: {
       js: {
         files: ['<%= yeoman.app %>/<%= yeoman.scripts %>/{,*/}*.js'],
-        tasks: ['newer:jshint:all'],
-        options: {
-          livereload: '<%= connect.options.livereload %>'
-        }
+        tasks: ['newer:jshint:all']
       },
       sass: {
         files: ['<%= yeoman.app %>/<%= yeoman.styles %>/{,*/}*.{scss,sass}'],
@@ -49,17 +46,6 @@ module.exports = function (grunt) {
       gruntfile: {
         files: ['Gruntfile.js']
       },
-      livereload: {
-        files: [
-          '<%= yeoman.app %>/<%= yeoman.views %>/**/*.twig',
-          '<%= yeoman.app %>/<%= yeoman.layout %>/*.twig',
-          '.tmp/<%= yeoman.styles %>/{,*/}*.css',
-          '<%= yeoman.app %>/<%= yeoman.images %>/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
-        ],
-         options: {
-          livereload: '<%= connect.options.livereload %>'
-        }
-      }
     },
 
     // The actual grunt server settings
@@ -96,7 +82,40 @@ module.exports = function (grunt) {
         }
       }
     },
+    browserSync: {
+      options: {
+        notify: false,
+        background: true,
+        reloadDebounce: 2000
+      },
 
+      livereload: {
+        options: {
+          startPath: "/<%= yeoman.preview %>/<%= yeoman.pages %>/article.html",
+          files: [
+            '<%= yeoman.app %>/<%= yeoman.views %>/**/*.twig',
+            '<%= yeoman.app %>/<%= yeoman.preview %>/<%= yeoman.pages %>/*.html',
+            '<%= yeoman.app %>/<%= yeoman.styles %>/*.scss',
+            '.tmp/<%= yeoman.styles %>/{,*/}*.css',
+            '<%= yeoman.app %>/images/{,*/}*',
+            '<%= yeoman.app %>/<%= yeoman.scripts %>/*.js'
+          ],
+          port: 9000,
+          server: {
+            baseDir: ['.tmp', appConfig.app],
+            routes: {
+              '/bower_components': './bower_components'
+            }
+          }
+        }
+      },
+      dist: {
+        options: {
+          background: false,
+          server: '<%= yeoman.dist %>'
+        }
+      }
+    },
     // Make sure code styles are up to par and there are no obvious mistakes
     jshint: {
       options: {
@@ -295,10 +314,7 @@ module.exports = function (grunt) {
     // Run some tasks in parallel to speed up the build process
 
     concurrent: {
-      server: [
-        'sass:server'
-      ],
-
+      server: ['sass:server'],
       dist: [
         'sass:dist',
         'imagemin',
@@ -333,16 +349,13 @@ module.exports = function (grunt) {
             }]
           }
         }
-
-    },
-
-
+      }
   });
 
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
     if (target === 'dist') {
-      return grunt.task.run(['build', 'connect:dist:keepalive']);
+      //return grunt.task.run(['build', 'connect:dist:keepalive']);
     }
 
     grunt.task.run([
@@ -350,7 +363,8 @@ module.exports = function (grunt) {
       'wiredep:serve',
       'twigRender',
       'concurrent:server',
-      'connect:livereload',
+      //'connect:livereload',
+      'browserSync:livereload',
       'watch'
     ]);
   });

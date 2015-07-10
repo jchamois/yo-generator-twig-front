@@ -3,19 +3,18 @@
 {% block title %}Page article{% endblock %}
 
 {% block header %}
+
 	<header id="header" role="banner">
-		Block header
+		<h1>HEADER</h1>
+		{% include '../partials/_nav.twig' %}
 	</header>
 {% endblock %}
 
 {% block content %}
-	<p>Block content</p>
+	<p>Mon contenu</p>
 {% endblock %}
 
 {% block footer %}
-	<p>Block footer</p>
+	<p>Mon footer</p>
 {% endblock %}
-
-
-
 
