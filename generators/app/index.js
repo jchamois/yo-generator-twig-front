@@ -134,8 +134,8 @@ module.exports = generators.Base.extend({
 
     jshintConfig: function () {
       this.fs.copy(
-        this.templatePath('_jshint'),
-        this.destinationPath('.jshint')
+        this.templatePath('_jshintrc'),
+        this.destinationPath('.jshintrc')
       );
     },
 
