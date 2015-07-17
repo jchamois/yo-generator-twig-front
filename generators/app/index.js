@@ -22,27 +22,30 @@ module.exports = generators.Base.extend({
   },
 
   askFor: function () {
-    console.log('askFor');
     var done = this.async();
 
     if (!this.options['skip-welcome-message']) {
-
       this.log(yosay('Alors Ca compile du ' + chalk.red(' Twig-front ') + '?'));
-
     }
 
     var prompts = [{
         name: 'appName',
-        message: 'What is your app\'s name ?'
+        message: 'Un nom pour le projet ?',
+        default : 'projet'
       },{
 
       type: 'checkbox',
       name: 'features',
-      message: 'Un petit modernizr ?',
+      message: 'Des outils supplémentaires à inclure ?',
       choices: [{
         name: 'Modernizr',
         value: 'includeModernizr',
-        checked: true
+        checked: false
+      },
+      {
+        name: 'Sass',
+        value: 'includeSass',
+        checked: false
       }]
     },{
       type: 'confirm',
@@ -56,7 +59,7 @@ module.exports = generators.Base.extend({
       type: 'confirm',
       name: 'includeAtomik',
       message: 'Atomik css ? ou pas ?',
-      default: true,
+      default: false,
       when: function (answers) {
         return answers.features
       }
@@ -73,6 +76,7 @@ module.exports = generators.Base.extend({
       this.includeModernizr = hasFeature('includeModernizr');
       this.includeJQuery = answers.includeJQuery;
       this.includeAtomik = answers.includeAtomik;
+      this.includeSass = hasFeature('includeSass');;
 
       done();
     }.bind(this));
@@ -91,7 +95,14 @@ module.exports = generators.Base.extend({
     },
 
     gruntfile: function () {
-      this.copy("_Gruntfile.js", "Gruntfile.js");
+
+      this.fs.copyTpl(
+        this.templatePath('_Gruntfile.js'),
+        this.destinationPath('Gruntfile.js'),
+        {
+         includeSass: this.includeSass
+        }
+      )
     },
 
     packageJSON: function () {
@@ -104,7 +115,7 @@ module.exports = generators.Base.extend({
     bower: function () {
 
       var bowerJson = {
-        name: _s.slugify(this.appname),
+        name: _s.slugify(this.appName),
         private: true,
         dependencies: {}
       };
@@ -115,6 +126,10 @@ module.exports = generators.Base.extend({
 
       if(this.includeModernizr) {
         bowerJson.dependencies['modernizr'] = '~2.8.3';
+      }
+
+      if (this.includeAtomik) {
+        bowerJson.dependencies['atomik-css'] = '~1.0.0';
       }
 
       this.fs.writeJSON('bower.json', bowerJson);
@@ -134,16 +149,15 @@ module.exports = generators.Base.extend({
 
     jshintConfig: function () {
       this.fs.copy(
-        this.templatePath('_jshint'),
-        this.destinationPath('.jshint')
+        this.templatePath('_jshintrc'),
+        this.destinationPath('.jshintrc')
       );
     },
 
     scripts: function () {
-      this.fs.copy(
-        this.templatePath('scripts/_app.js'),
-        this.destinationPath('app/scripts/app.js')
-      );
+      this.copy('scripts/_app.js','app/scripts/app.js')
+      this.copy('scripts/_utils.js','app/scripts/utils.js')
+      this.copy('scripts/_barker.js','app/scripts/barker.js')
     },
 
     layout: function(){
@@ -158,32 +172,29 @@ module.exports = generators.Base.extend({
           }
         );
     },
-
-
     css: function(){
+      var ext = (this.includeSass) ? 'scss' : 'css';
 
        if (this.includeAtomik) {
          this.remote('jchamois', 'atomik-css', 'master', function(err, remote) {
-            remote.copy("app/src/css/reset.css", "app/styles/reset.scss");
-            remote.copy("app/src/css/atomic-core.css", "app/styles/atomic-core.scss");
-            remote.copy("app/src/css/atomic-custom.css", "app/styles/atomic-custom.scss");
-            remote.copy("app/src/css/author.css", "app/styles/author.scss");
-            remote.copy("app/src/css/mq.css", "app/styles/mq.scss");
+            remote.copy("app/src/css/reset.css", "app/styles/reset."+ext);
+            remote.copy("app/src/css/atomic-core.css", "app/styles/grid-module."+ext);
+            remote.copy("app/src/css/atomic-custom.css", "app/styles/atomic-custom."+ext);
+            remote.copy("app/src/css/author.css", "app/styles/author."+ext);
+            remote.copy("app/src/css/mq.css", "app/styles/mq."+ext);
         }, true);
 
        }else{
-          this.copy("styles/_main.scss", "app/styles/main.scss");
+          this.copy("styles/_main.css", "app/styles/main."+ext);
        }
-
-
     },
 
     mainFiles: function () {
-        this.copy("scripts/_app.js", "app/scripts/app.js");
-        this.copy("scripts/_libs.js", "app/scripts/libs.js");
         this.copy("views/data/data.json", "app/views/data/data.json");
         this.copy("views/pages/_article.twig", "app/views/pages/article.twig");
         this.copy("views/partials/_nav.twig", "app/views/partials/_nav.twig");
+        this.copy("views/partials/_header.twig", "app/views/partials/_header.twig");
+        this.copy("views/partials/_footer.twig", "app/views/partials/_footer.twig");
     }
   },
 
@@ -205,10 +216,14 @@ module.exports = generators.Base.extend({
       chalk.yellow.bold('grunt wiredep') +
       '.';
 
+      var endCredit = '\nDONE ! ' +
+      chalk.yellow.bold('If there is an error with npm, run "sudo npm install"') +
+      '\nthen run '+ chalk.yellow.bold('grunt serve') +' to bootstrap the project';
+
     if (this.options['skip-install']) {
       this.log(howToInstall);
       return;
     }
-    console.log('DONE ! Now you can run grunt serve from your project folder')
+    this.log(endCredit)
   }
 });
