@@ -58,7 +58,7 @@ module.exports = generators.Base.extend({
     },{
       type: 'confirm',
       name: 'includeAtomik',
-      message: 'Atomik css ? ou pas ?',
+      message: 'Atomik css ?',
       default: false,
       when: function (answers) {
         return answers.features
@@ -206,7 +206,6 @@ module.exports = generators.Base.extend({
   },
 
   end: function () {
-
     var bowerJson = this.fs.readJSON(this.destinationPath('bower.json'));
     var howToInstall =
       '\nAfter running ' +
