@@ -1,0 +1,46 @@
+<!doctype html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <title> <%= appName %></title>
+        <meta name="description" content="Programmes TV">
+        <meta name="viewport" content="width=device-width">
+
+        <!-- build:css(.tmp) styles/main.css -->
+        <% if (includeAtomik) { %>
+        <link rel="stylesheet" href="/styles/reset.css">
+        <link rel="stylesheet" href="/styles/grid-module.css">
+        <link rel="stylesheet" href="/styles/author.css">
+        <link rel="stylesheet" href="/styles/atomic-custom.css">
+        <% } %>
+        <!-- bower:css -->
+        <!-- endbower -->
+        <% if (includeAtomik) { %>
+       <link rel="stylesheet" href="/styles/mq.css">
+        <% } else{%>
+        <link rel="stylesheet" href="/styles/main.css">
+        <% }%>
+        <!-- endbuild -->
+      </head>
+      <body>
+        <div id="page">
+            {% block header %}{% endblock %}
+
+            {% block content %}{% endblock %}
+
+            {% block footer %}{% endblock %}
+        </div>
+    <!-- build:js(.) scripts/vendor.js -->
+        <!-- bower:js -->
+        <!-- endbower -->
+        <!-- endbuild -->
+        <!-- build:js({.tmp,app}) scripts/scripts.js -->
+        <script src="/scripts/utils.js"></script>
+        <script src="/scripts/app.js"></script>
+        <script src="/scripts/barker.js"></script>
+        <!-- endbuild -->
+    </body>
+</html>
+
+
+

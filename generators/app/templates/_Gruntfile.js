@@ -20,7 +20,8 @@ module.exports = function (grunt) {
     layout: 'layout',
     scripts : 'scripts',
     styles : 'styles',
-    images : 'images'
+    images : 'images',
+    startPage : 'home'
   };
 
   // Define the configuration for all the tasks
@@ -64,7 +65,7 @@ module.exports = function (grunt) {
       },
       livereload: {
         options: {
-          open: 'http://localhost:9000/<%%= yeoman.preview %>/<%%= yeoman.pages %>/article.html',
+          open: 'http://localhost:9000/<%%= yeoman.preview %>/<%%= yeoman.pages %>/<%%= yeoman.startPage %>.html',
           middleware: function (connect) {
             return [
               connect.static('.tmp'),
@@ -92,12 +93,12 @@ module.exports = function (grunt) {
       options: {
         notify: false,
         background: true,
-        reloadDebounce: 2000
+        watchTask: true
       },
 
       livereload: {
         options: {
-          startPath: "/<%%= yeoman.preview %>/<%%= yeoman.pages %>/article.html",
+          startPath: "/<%%= yeoman.preview %>/<%%= yeoman.pages %>/<%%= yeoman.startPage %>.html",
           files: [
             '<%%= yeoman.app %>/<%%= yeoman.views %>/**/*.twig',
             '<%%= yeoman.app %>/<%%= yeoman.preview %>/<%%= yeoman.pages %>/*.html',
