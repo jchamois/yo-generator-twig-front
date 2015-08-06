@@ -25,7 +25,7 @@ module.exports = generators.Base.extend({
     var done = this.async();
 
     if (!this.options['skip-welcome-message']) {
-      this.log(yosay('Alors Ca compile du ' + chalk.red(' Twig-front ') + '?'));
+      this.log(yosay('Alors ? ca compile du ' + chalk.red(' Twig-front ') + '?'));
     }
 
     var prompts = [{
@@ -129,7 +129,7 @@ module.exports = generators.Base.extend({
       }
 
       if (this.includeAtomik) {
-        bowerJson.dependencies['atomik-css'] = '~1.0.0';
+        bowerJson.dependencies['atomik-css'] = 'latest';
       }
 
       this.fs.writeJSON('bower.json', bowerJson);
@@ -178,7 +178,7 @@ module.exports = generators.Base.extend({
        if (this.includeAtomik) {
          this.remote('jchamois', 'atomik-css', 'master', function(err, remote) {
             remote.copy("app/src/css/reset.css", "app/styles/reset."+ext);
-            remote.copy("app/src/css/atomic-core.css", "app/styles/grid-module."+ext);
+            remote.copy("app/src/css/grid-module.css", "app/styles/grid-module."+ext);
             remote.copy("app/src/css/atomic-custom.css", "app/styles/atomic-custom."+ext);
             remote.copy("app/src/css/author.css", "app/styles/author."+ext);
             remote.copy("app/src/css/mq.css", "app/styles/mq."+ext);
