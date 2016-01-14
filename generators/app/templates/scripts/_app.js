@@ -16,10 +16,5 @@ TEL.DOM = { /* MISE EN CACHE DES SELECTEUR - perf*/
 
 $(window).load(function(){
 	utils.isTouch()
-	TEL.barker.bark('Ouahahaha')
 });
-
-$(document).ready(function(){
-}).on('click', function(event){});
-
 

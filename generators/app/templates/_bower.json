@@ -1,9 +1,7 @@
 {
   "name": "app",
-  "version": "0.0.0",
-  "dependencies": {
-
-  },
+  "version": "1.0.0",
+  "dependencies": {},
   "appPath": "app",
   "moduleName": "app"
 }

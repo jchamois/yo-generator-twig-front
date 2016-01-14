@@ -1,12 +1,12 @@
 {
   "name": "generator-twig-front",
-  "version": "1.1.4",
+  "version": "1.2.0",
   "description": "Yeoman generator",
   "license": "MIT",
   "main": "app/index.js",
   "repository": "jchamois/generator-twig-front",
   "author": {
-    "name": "jeremy chamois",
+    "name": "Jeremy Chamois",
     "email": "",
     "url": "https://github.com/jchamois"
   },

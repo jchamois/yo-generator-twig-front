@@ -157,7 +157,7 @@ module.exports = generators.Base.extend({
     scripts: function () {
       this.copy('scripts/_app.js','app/scripts/app.js')
       this.copy('scripts/_utils.js','app/scripts/utils.js')
-      this.copy('scripts/_barker.js','app/scripts/barker.js')
+      this.copy('scripts/_module.js','app/scripts/module.js')
     },
 
     layout: function(){
