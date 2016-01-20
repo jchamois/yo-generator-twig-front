@@ -1,4 +1,5 @@
 'use strict';
+
 var generators = require('yeoman-generator');
 var yosay = require('yosay');
 var chalk = require('chalk');
@@ -84,7 +85,7 @@ module.exports = generators.Base.extend({
 
   writing: {
       createFolders: function() {
-        mkdirp("app/images");
+        mkdirp("app/assets/images");
         mkdirp("app/preview");
         mkdirp("app/scripts");
         mkdirp("app/styles");
@@ -173,6 +174,7 @@ module.exports = generators.Base.extend({
         );
     },
     css: function(){
+
       var ext = (this.includeSass) ? 'scss' : 'css';
 
        if (this.includeAtomik) {

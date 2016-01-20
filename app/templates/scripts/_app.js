@@ -1,13 +1,6 @@
 "use strict";
 
-var TEL = TEL || {};
-
-TEL.DOM = { /* MISE EN CACHE DES SELECTEUR - perf*/
-	$header : $('#header'),
-	$nav : $('#nav'),
-	$win : $(window),
-	$page : $('#page')
-}
+var APP = APP || {};
 
 /*EVENTS SECTION */
 

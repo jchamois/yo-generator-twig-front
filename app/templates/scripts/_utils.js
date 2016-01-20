@@ -5,6 +5,7 @@ var utils = utils || {};
 
 /*TOUCH DETECTION */
 utils.isTouch = function(){
+
 	var htmlNode = document.getElementsByTagName('html')[0];
 
 	function touchEvent() {

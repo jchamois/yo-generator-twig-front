@@ -1,6 +1,6 @@
 'use strict';
 
-TEL.myModule = (function () {
+APP.myModule = (function () {
 
 	var privates = {};
 
@@ -17,6 +17,6 @@ TEL.myModule = (function () {
 	var elems = document.querySelectorAll('div');
 
 	[].forEach.call(elems, function(elem) {
-	 	elem.myModule = new TEL.myModule(elem,'arg1', 'arg2');
+	 	elem.myModule = new APP.myModule(elem,'arg1', 'arg2');
 	});
-});
+
