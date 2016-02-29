@@ -130,7 +130,7 @@ module.exports = generators.Base.extend({
       }
 
       if (this.includeAtomik) {
-        bowerJson.dependencies['atomik-css'] = 'latest';
+        //bowerJson.dependencies['atomik-css'] = 'latest';
       }
 
       this.fs.writeJSON('bower.json', bowerJson);
@@ -177,18 +177,21 @@ module.exports = generators.Base.extend({
 
       var ext = (this.includeSass) ? 'scss' : 'css';
 
+        this.copy("styles/_reset.css", "app/styles/reset."+ext);
+       this.copy("styles/_main.css", "app/styles/main."+ext);
+
+
        if (this.includeAtomik) {
          this.remote('jchamois', 'atomik-css', 'master', function(err, remote) {
-            remote.copy("app/src/css/reset.css", "app/styles/reset."+ext);
-            remote.copy("app/src/css/grid-module.css", "app/styles/grid-module."+ext);
-            remote.copy("app/src/css/atomic-custom.css", "app/styles/atomic-custom."+ext);
-            remote.copy("app/src/css/author.css", "app/styles/author."+ext);
-            remote.copy("app/src/css/mq.css", "app/styles/mq."+ext);
+            remote.copy("dist/css/grid-module.css", "app/styles/grid-module."+ext);
+            remote.copy("dist/css/atomik-custom.css", "app/styles/atomik-custom."+ext);
+            remote.copy("dist/css/author.css", "app/styles/author."+ext);
+            remote.copy("dist/css/mq.css", "app/styles/mq."+ext);
         }, true);
 
-       }else{
-          this.copy("styles/_main.css", "app/styles/main."+ext);
        }
+
+
     },
 
     mainFiles: function () {

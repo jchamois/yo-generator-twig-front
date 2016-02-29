@@ -110,6 +110,9 @@ module.exports = function (grunt) {
 	// Empties folders to start fresh
 	clean: {
 	  dist: {
+  		options : {
+	  		force:true
+	  	},
 		files: [{
 		  dot: true,
 		  src: [
@@ -119,7 +122,18 @@ module.exports = function (grunt) {
 		  ]
 		}]
 	  },
-	  server: '.tmp'
+	  server: {
+	 	 options : {
+	  		force:true
+	  	},
+	  	files: [{
+		  dot: true,
+		  src: [
+			'.tmp'
+
+		  ]
+		}]
+	 }
 	},
 
 	// Automatically inject Bower components into the app

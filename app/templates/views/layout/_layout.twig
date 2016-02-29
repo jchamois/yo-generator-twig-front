@@ -2,37 +2,46 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Projet TwigJS</title>
-		<meta name="description" content="Programmes TV">
+		<title> <% appName %></title>
+		<meta name="description" content="Twig Front">
 		<meta name="viewport" content="width=device-width">
 
 		<!-- build:css({.tmp,app}) styles/main.css -->
 
-		<!-- bower:css -->
+		<!-- bower:css --><!-- endbower -->
 
-		<!-- endbower -->
+		<link rel="stylesheet" href="/styles/reset.css">
 		<link rel="stylesheet" href="/styles/main.css">
+
+		<% if (includeAtomik) { %>
+		<link rel="stylesheet" href="/styles/grid-module.css">
+		<link rel="stylesheet" href="/styles/atomik-custom.css">
+		<link rel="stylesheet" href="/styles/atomik-core.css">
+		<link rel="stylesheet" href="/styles/mq.css">
+		<% } %>
+
 		<!-- endbuild -->
 	</head>
 	<body>
-		<div class="wrapper">
-			{% block header %}{% endblock %}
+		<div
+		class="wrapper">
+		{% block header %}{% endblock %}
 
-			{% block content %}{% endblock %}
+		{% block content %}{% endblock %}
 
-			{% block footer %}{% endblock %}
-		</div>
+		{% block footer %}{% endblock %}
+	</div>
 
-		<!-- build:js(.) scripts/vendor.js -->
-		<!-- bower:js -->
-		<!-- endbower -->
-		<!-- endbuild -->
-		<!-- build:js({.tmp,app}) scripts/scripts.js -->
-		<script src="/scripts/app.js"></script>
-		<script src="/scripts/utils.js"></script>
-		<script src="/scripts/module.js"></script>
+	<!-- build:js(.) scripts/vendor.js -->
+	<!-- bower:js -->
+	<!-- endbower -->
+	<!-- endbuild -->
+	<!-- build:js({.tmp,app}) scripts/scripts.js -->
+	<script src="/scripts/app.js"></script>
+	<script src="/scripts/utils.js"></script>
+	<script src="/scripts/module.js"></script>
 
-		<!-- endbuild -->
+	<!-- endbuild -->
 	</body>
 </html>
 
