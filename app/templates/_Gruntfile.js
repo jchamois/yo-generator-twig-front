@@ -140,22 +140,29 @@ module.exports = function (grunt) {
 	wiredep: {
 	  build: {
 		src: ['app/views/layout/layout.twig'],
-		ignorePath:  '../../../'
+		ignorePath:  '../../../',
+		onError : function(err){
+			if(err.code == 'BOWER_COMPONENTS_MISSING'){
+				grunt.option("force",true);
+			  }
+		}
 	  },
 	  serve: {
 		src: ['app/views/layout/layout.twig'],
 		ignorePath:  /\.\.\//,
 		  onError: function(err) {
+
 		  if(err.code == 'BOWER_COMPONENTS_MISSING'){
-			console.log(err.code)
 			grunt.option("force",true);
 		  }
 		}
 	  },
+	  <% if (includeSass) { %>
 	  sass: {
 		src: ['app/styles/{,*/}*.{scss,sass}'],
 		ignorePath: /(\.\.\/){1,2}bower_components\//
 	  }
+	  <% } %>
 	},
 
 	// Compiles Sass to CSS and generates necessary files if requested
@@ -333,7 +340,9 @@ module.exports = function (grunt) {
 	concurrent: {
 	  server: ['sass'],
 	  dist: [
+	   <% if (includeSass) { %>
 		'sass:dist',
+		 <% } %>
 		'imagemin',
 		'svgmin'
 	  ]
@@ -354,18 +363,21 @@ module.exports = function (grunt) {
 		},
 	  },
 
-	 'string-replace': {
-		img: {
-		  files: {
-			'dist/': 'dist/*.html'
-		  },
-		  options: {
-			replacements: [{
-			  pattern: /\/assets/gi,
-			  replacement: 'assets'
-			}]
-		  }
-		}
+	'string-replace': {
+	  	img: {
+	  		files: [{
+	  			expand: true,
+	  			cwd: 'dist/',
+	  			src: '**/*.html',
+	  			dest: 'dist/'
+	  		}],
+	  		options: {
+	  			replacements: [{
+	  				pattern: /\/assets/gi,
+	  				replacement: 'assets'
+	  			}]
+	  		}
+	  	}
 	  }
   });
 
@@ -378,7 +390,9 @@ module.exports = function (grunt) {
 	grunt.task.run([
 	  'clean:server',
 	  'wiredep:serve',
+	   <% if (includeSass) { %>
 	  'concurrent:server',
+	   <% } %>
 	  'twigRender',
 	  'browserSync:livereload',
 	  'watch'
