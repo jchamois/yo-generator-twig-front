@@ -184,6 +184,7 @@ module.exports = generators.Base.extend({
        if (this.includeAtomik) {
          this.remote('jchamois', 'atomik-css', 'master', function(err, remote) {
             remote.copy("dist/css/grid-module.css", "app/styles/grid-module."+ext);
+            remote.copy("dist/css/atomik-custom.css", "app/styles/atomik-core."+ext);
             remote.copy("dist/css/atomik-custom.css", "app/styles/atomik-custom."+ext);
             remote.copy("dist/css/author.css", "app/styles/author."+ext);
             remote.copy("dist/css/mq.css", "app/styles/mq."+ext);
