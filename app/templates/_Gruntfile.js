@@ -38,11 +38,10 @@ module.exports = function (grunt) {
 		js: {
 			files: ['app/scripts/{,*/}*.js'],
 			tasks: ['newer:jshint:all', 'babel']
-		},<% if (includeSass) { %>
-		sass: {
+		}, <% if (includeSass) { %> sass: {
 			files: ['<%%= config.app %>/styles/{,*/}*.{scss,sass}'],
 			tasks: ['sass', 'postcss']
-		},<% } %>
+		}, <% } %>
 		styles: {
 			files: ['app/styles/{,*/}*.css'],
 			tasks: ['newer:copy:styles', 'postcss']
@@ -105,7 +104,6 @@ module.exports = function (grunt) {
 		]
 	  }
 	},
-
 	babel : {
 		options: {
 			sourceMap: true,

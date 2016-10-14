@@ -75,6 +75,7 @@
 
 				this.appName = answers.appName;
 				this.includeModernizr = hasFeature('includeModernizr');
+				
 				this.includeJQuery = answers.includeJQuery;
 				this.includeAtomik = answers.includeAtomik;
 				this.includeSass = hasFeature('includeSass');;
@@ -176,7 +177,7 @@
 
 			if (this.includeAtomik) {
 				this.remote('jchamois', 'atomik-css', 'master', function(err, remote) {
-					remote.copy("dist/css/grid-module.css", "app/styles/reset."+ext);
+					remote.copy("dist/css/reset.css", "app/styles/reset."+ext);
 					remote.copy("dist/css/grid-module.css", "app/styles/grid-module."+ext);
 					remote.copy("dist/css/atomik-custom.css", "app/styles/atomik-core."+ext);
 					remote.copy("dist/css/atomik-custom.css", "app/styles/atomik-custom."+ext);
