@@ -7,7 +7,6 @@ var APP = APP || {};
 // Attempt to externalize binding as much as possible,
 // to clean up the code, and separate the logic.
 
-$(window).load(function(){
-	utils.isTouch()
+window.addEventListener('load',function(){
+	console.log('load event')
 });
-

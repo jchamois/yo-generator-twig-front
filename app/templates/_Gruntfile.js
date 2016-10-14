@@ -2,96 +2,95 @@
 
 module.exports = function (grunt) {
 
-  // Load grunt tasks automatically
-   require('jit-grunt')(grunt, {
-	useminPrepare: 'grunt-usemin',
-	cdnify: 'grunt-google-cdn'
-  });
+	// Load grunt tasks automatically
+	require('jit-grunt')(grunt, {
+		useminPrepare: 'grunt-usemin',
+		cdnify: 'grunt-google-cdn'
+	});
 
-  // Time how long tasks take. Can help when optimizing build times
-  require('time-grunt')(grunt);
+	// Time how long tasks take. Can help when optimizing build times
+	require('time-grunt')(grunt);
 
-  // Configurable paths for the application
-  var config = {
-	app: 'app',
-	dist: 'dist',
-	views : 'views',
-	preview: 'preview',
-	partials: 'partials',
-	pages: 'pages',
-	layout: 'layout',
-	scripts : 'scripts',
-	styles : 'styles',
-	assets : 'assets',
-	images : 'images',
-	videos : 'videos'
-  };
+	// Configurable paths for the application
+	var config = {
+		app: 'app',
+		dist: 'dist',
+		views : 'views',
+		preview: 'preview',
+		partials: 'partials',
+		pages: 'pages',
+		layout: 'layout',
+		scripts : 'scripts',
+		styles : 'styles',
+		assets : 'assets',
+		images : 'images',
+		videos : 'videos'
+	};
 
-  // Define the configuration for all the tasks
-  grunt.initConfig({
+	// Define the configuration for all the tasks
+	grunt.initConfig({
 
 	// Project settings
 	config: config,
 
 	// Watches files for changes and runs tasks based on the changed files
 	watch: {
-	  js: {
-		files: ['app/scripts/{,*/}*.js'],
-		tasks: ['newer:jshint:all']
-	  },<% if (includeSass) { %>
-	  sass: {
-		files: ['<%%= config.app %>/styles/{,*/}*.{scss,sass}'],
-		tasks: ['sass', 'postcss']
+		js: {
+			files: ['app/scripts/{,*/}*.js'],
+			tasks: ['newer:jshint:all', 'babel']
+		},<% if (includeSass) { %>
+		sass: {
+			files: ['<%%= config.app %>/styles/{,*/}*.{scss,sass}'],
+			tasks: ['sass', 'postcss']
+		},<% } %>
+		styles: {
+			files: ['app/styles/{,*/}*.css'],
+			tasks: ['newer:copy:styles', 'postcss']
 		},
-		<% } %>
-	  styles: {
-		files: ['app/styles/{,*/}*.css'],
-		tasks: ['newer:copy:styles', 'postcss']
-	  },
-	  twig: {
-		files: ['app/views/**/*.twig'],
-		tasks: ['twigRender']
-	  },
-	  gruntfile: {
-		files: ['Gruntfile.js']
-	  }
+		twig: {
+			files: ['app/views/**/*.twig'],
+			tasks: ['twigRender']
+		},
+		gruntfile: {
+			files: ['Gruntfile.js']
+		}
 	},
 
 	// The actual grunt server settings
 
 	browserSync: {
-	  options: {
-		notify: false,
-		background: true,
-		reloadDebounce: 2000
-	  },
+		options: {
+			notify: false,
+			background: true,
+			reloadDebounce: 2000
+		},
 
-	  livereload: {
-		options: {
-		  startPath: "/preview/pages/article.html",
-		  files: [
-			'app/views/**/*.twig',
-			'app/preview/pages/*.html',
-			'app/styles/*.{css,scss,sass}',
-			'.tmp/styles/*.{css,scss,sass}',
-			'app/assets/**',
-			'app/scripts/*.js'
-		  ],
-		  port: 9000,
-		  server: {
-			baseDir: ['.tmp', config.app],
-			routes: {
-			  '/bower_components': './bower_components'
+		livereload: {
+			options: {
+				startPath: "/preview/pages/home.html",
+				files: [
+					'app/views/**/*.twig',
+					'app/preview/pages/*.html',
+					'app/styles/*.{css,scss,sass}',
+					'.tmp/styles/*.{css,scss,sass}',
+					'app/assets/**',
+					'app/scripts/*.js'
+		  		],
+				port: 9000,
+				server: {
+				baseDir: ['.tmp', config.app],
+				routes: {
+					'/bower_components': './bower_components'
+				}
 			}
-		  }
 		}
 	  },
-	  dist: {
-		options: {
-		  background: false,
-		  server: 'dist'
+		dist: {
+			options: {
+				background: false,
+				server: 'dist'
+			}
 		}
-	  }
 	},
 	// Make sure code styles are up to par and there are no obvious mistakes
 	jshint: {
@@ -107,12 +106,27 @@ module.exports = function (grunt) {
 	  }
 	},
 
+	babel : {
+		options: {
+			sourceMap: true,
+			presets: ['es2015']
+		},
+		dist: {
+			files: [{
+				expand: true,
+				cwd: 'app/scripts',
+				src: ['*.js'],
+				dest: '.tmp/scripts/'
+			}]
+		}
+	},
+
 	// Empties folders to start fresh
 	clean: {
 	  dist: {
-  		options : {
-	  		force:true
-	  	},
+		options : {
+			force:true
+		},
 		files: [{
 		  dot: true,
 		  src: [
@@ -123,10 +137,10 @@ module.exports = function (grunt) {
 		}]
 	  },
 	  server: {
-	 	 options : {
-	  		force:true
-	  	},
-	  	files: [{
+		 options : {
+			force:true
+		},
+		files: [{
 		  dot: true,
 		  src: [
 			'.tmp'
@@ -273,28 +287,28 @@ module.exports = function (grunt) {
 
 	// Copies remaining files to places other tasks can use
 	copy: {
-	  dist: {
+	dist: {
 		files: [{
-		  expand: true,
-		  flatten: true,
-		  dot: true,
-		  cwd: 'app',
-		  dest: 'dist',
-		  src: ['preview/pages/*.html']
-		  },{
-		  expand: true,
-		  flatten: true,
-		  dot: true,
-		  cwd: 'app',
-		  dest: 'dist',
-		  src: ['preview/pages/*.html']
+			expand: true,
+			flatten: true,
+			dot: true,
+			cwd: 'app',
+			dest: 'dist',
+			src: ['preview/pages/*.html']
+			},{
+			expand: true,
+			flatten: true,
+			dot: true,
+			cwd: 'app',
+			dest: 'dist',
+			src: ['preview/pages/*.html']
 		},
 		{
-		  expand: true,
-		  dot: true,
-		  cwd: 'app',
-		  dest: 'dist',
-		  src: [
+			expand: true,
+			dot: true,
+			cwd: 'app',
+			dest: 'dist',
+			src: [
 			'*.{ico,png,txt}',
 			'.htaccess',
 			'*.html',
@@ -303,127 +317,121 @@ module.exports = function (grunt) {
 			'bower_components/**/*.css']
 		}
 		]
-	  },
-	   styles: {
+	},
+	styles: {
 		expand: true,
 		cwd: 'app/styles',
 		dest: '.tmp/styles/',
 		src: [
-		  '{,*/}*.css',
-		  'bower_components/**/*.css'
+			'{,*/}*.css',
+			'bower_components/**/*.css'
 		]
 	  }
 	},
 
 	postcss: {
-	  options: {
-		map: true,
-		processors: [
-		  // Add vendor prefixed styles
-		  require('autoprefixer')({
-			browsers: ['> 1%', 'last 10 versions', 'Firefox ESR']
-		  })
-		]
-	  },
-	  dist: {
-		files: [{
-		  expand: true,
-		  cwd: '.tmp/styles/',
-		  src: '{,*/}*.css',
-		  dest: '.tmp/styles/'
-		}]
-	  }
+		options: {
+			map: true,
+			processors: [
+				// Add vendor prefixed styles
+				require('autoprefixer')({
+				browsers: ['> 1%', 'last 10 versions', 'Firefox ESR']
+				})
+			]
+		},
+		dist: {
+			files: [{
+				expand: true,
+				cwd: '.tmp/styles/',
+				src: '{,*/}*.css',
+				dest: '.tmp/styles/	'
+			}]
+		}
 	},
 
 	// Run some tasks in parallel to speed up the build process
 
 	concurrent: {
-	  server: ['sass'],
-	  dist: [
-	   <% if (includeSass) { %>
-		'sass:dist',
-		 <% } %>
+		server: ['sass'],
+		dist: [<% if (includeSass){ %>
+		'sass:dist', <% } %>
 		'imagemin',
 		'svgmin'
-	  ]
+		]
 	},
 
 	twigRender: {
 		your_target: {
-		  files : [
-			{
-			  data: 'app/views/data/data.json',
-			  expand: true,
-			  cwd: 'app/views',
-			  src: ['pages/*.twig'], // Match twig templates but not partials
-			  dest: 'app/preview',
-			  ext: '.html'   // index.twig + datafile.json => index.html
-			}
-		  ]
-		},
-	  },
+			files : [{
+				data: 'app/views/data/data.json',
+				expand: true,
+				cwd: 'app/views',
+				src: ['pages/*.twig'], // Match twig templates but not partials
+				dest: 'app/preview',
+				ext: '.html'   // index.twig + datafile.json => index.html
+			}]
+		}
+	},
 
 	'string-replace': {
-	  	img: {
-	  		files: [{
-	  			expand: true,
-	  			cwd: 'dist/',
-	  			src: '**/*.html',
-	  			dest: 'dist/'
-	  		}],
-	  		options: {
-	  			replacements: [{
-	  				pattern: /\/assets/gi,
-	  				replacement: 'assets'
-	  			}]
-	  		}
-	  	}
+		img: {
+			files: [{
+				expand: true,
+				cwd: 'dist/',
+				src: '**/*.html',
+				dest: 'dist/'
+			}],
+			options: {
+				replacements: [{
+					pattern: /\/assets/gi,
+					replacement: 'assets'
+				}]
+			}
+		}
 	  }
   });
 
 
-  grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
-	if (target === 'dist') {
-	  //return grunt.task.run(['build', 'connect:dist:keepalive']);
-	}
+	grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
+		
+		grunt.task.run([
+			'clean:server',
+			'wiredep:serve',
+			<% if (includeSass) { %>
+			'concurrent:server',
+			<% } %>
+			'babel',
+			'twigRender',
+			'browserSync:livereload',
+			'watch'
+		]);
+	});
 
-	grunt.task.run([
-	  'clean:server',
-	  'wiredep:serve',
-	   <% if (includeSass) { %>
-	  'concurrent:server',
-	   <% } %>
-	  'twigRender',
-	  'browserSync:livereload',
-	  'watch'
+	grunt.registerTask('server', 'DEPRECATED TASK. Use the "serve" task instead', function (target) {
+		grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
+		grunt.task.run(['serve:' + target]);
+	});
+
+
+	grunt.registerTask('build', [
+		'clean:dist',
+		'wiredep:build',
+		'concurrent:dist',
+		'babel',
+		'twigRender',
+		'copy:dist',
+		'useminPrepare',
+		'cdnify',
+		'cssmin',
+		'concat',
+		'uglify',
+		'filerev',
+		'usemin',
+		'string-replace'
 	]);
-  });
 
-  grunt.registerTask('server', 'DEPRECATED TASK. Use the "serve" task instead', function (target) {
-	grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
-	grunt.task.run(['serve:' + target]);
-  });
-
-
-  grunt.registerTask('build', [
-	'clean:dist',
-	'wiredep:build',
-	'concurrent:dist',
-	'twigRender',
-	'copy:dist',
-	'copy:styles',
-	'useminPrepare',
-	'cdnify',
-	'cssmin',
-	'concat',
-	'uglify',
-	'filerev',
-	'usemin',
-	'string-replace'
-  ]);
-
-  grunt.registerTask('default', [
-	'build'
-  ]);
+	grunt.registerTask('default', [
+		'build'
+	]);
 };
 

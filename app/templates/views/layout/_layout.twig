@@ -10,26 +10,27 @@
 
 		<!-- bower:css --><!-- endbower -->
 
-		<link rel="stylesheet" href="/styles/reset.css">
-		<link rel="stylesheet" href="/styles/main.css">
-
 		<% if (includeAtomik) { %>
-		<link rel="stylesheet" href="/styles/grid-module.css">
-		<link rel="stylesheet" href="/styles/atomik-custom.css">
-		<link rel="stylesheet" href="/styles/atomik-core.css">
-		<link rel="stylesheet" href="/styles/mq.css">
-		<% } %>
 
+			<link rel="stylesheet" href="/styles/reset.css">
+			<link rel="stylesheet" href="/styles/author.css">
+			<link rel="stylesheet" href="/styles/grid-module.css">
+			<link rel="stylesheet" href="/styles/atomik-custom.css">
+			<link rel="stylesheet" href="/styles/atomik-core.css">
+			<link rel="stylesheet" href="/styles/mq.css">
+		<% } else {%>
+			<link rel="stylesheet" href="/styles/reset.css">
+			<link rel="stylesheet" href="/styles/main.css">
+		<% } %>
 		<!-- endbuild -->
 	</head>
 	<body>
-		<div
-		class="wrapper">
-		{% block header %}{% endblock %}
+		<div class="wrapper">
+			{% block header %}{% endblock %}
 
-		{% block content %}{% endblock %}
+			{% block content %}{% endblock %}
 
-		{% block footer %}{% endblock %}
+			{% block footer %}{% endblock %}
 	</div>
 
 	<!-- build:js(.) scripts/vendor.js -->
@@ -37,13 +38,9 @@
 	<!-- endbower -->
 	<!-- endbuild -->
 	<!-- build:js({.tmp,app}) scripts/scripts.js -->
-	<script src="/scripts/app.js"></script>
 	<script src="/scripts/utils.js"></script>
+	<script src="/scripts/app.js"></script>
 	<script src="/scripts/module.js"></script>
-
 	<!-- endbuild -->
 	</body>
 </html>
-
-
-
