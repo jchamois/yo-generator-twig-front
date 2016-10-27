@@ -333,7 +333,7 @@ module.exports = function (grunt) {
 			processors: [
 				// Add vendor prefixed styles
 				require('autoprefixer')({
-				browsers: ['> 1%', 'last 10 versions', 'Firefox ESR']
+					browsers: ['last 5 versions', 'ie >= 9']
 				})
 			]
 		},
@@ -350,7 +350,7 @@ module.exports = function (grunt) {
 	// Run some tasks in parallel to speed up the build process
 
 	concurrent: {
-		server: ['sass'],
+		server: ['sass', 'postcss'],
 		dist: [<% if (includeSass){ %>
 		'sass:dist', <% } %>
 		'imagemin',
@@ -398,6 +398,7 @@ module.exports = function (grunt) {
 			<% if (includeSass) { %>
 			'concurrent:server',
 			<% } %>
+			'postcss',
 			'babel',
 			'twigRender',
 			'browserSync:livereload',
@@ -414,6 +415,7 @@ module.exports = function (grunt) {
 	grunt.registerTask('build', [
 		'clean:dist',
 		'wiredep:build',
+		'postcss',
 		'concurrent:dist',
 		'babel',
 		'twigRender',
